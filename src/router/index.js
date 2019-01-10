@@ -12,8 +12,12 @@ export default new Router({
         {
             path: '/',
             component: resolve => require(['../components/common/Home.vue'], resolve),
-            meta: { title: '自述文件' },
             children:[
+                {
+                    path: '/crm',
+                    component: resolve => require(['../components/page/Crm.vue'], resolve),
+                    meta: { title: '企业管理' }
+                },
                 {
                     path: '/dashboard',
                     component: resolve => require(['../components/page/Dashboard.vue'], resolve),

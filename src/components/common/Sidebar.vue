@@ -40,6 +40,11 @@
                 items: [
                     {
                         icon: 'el-icon-lx-home',
+                        index: 'crm',
+                        title: '企业管理'
+                    },
+                    {
+                        icon: 'el-icon-lx-home',
                         index: 'dashboard',
                         title: '系统首页'
                     },

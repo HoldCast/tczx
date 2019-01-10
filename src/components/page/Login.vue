@@ -1,7 +1,7 @@
 <template>
     <div class="login-wrap">
         <div class="ms-login">
-            <div class="ms-title">后台管理系统</div>
+            <div class="ms-title">同城咨询应用平台</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
                     <el-input v-model="ruleForm.username" placeholder="username">
@@ -23,12 +23,13 @@
 </template>
 
 <script>
+    let Base64 = require('js-base64').Base64
     export default {
         data: function(){
             return {
                 ruleForm: {
-                    username: 'admin',
-                    password: '123123'
+                    username: 'ceo',
+                    password: 'ceo'
                 },
                 rules: {
                     username: [
@@ -44,10 +45,18 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        localStorage.setItem('ms_username',this.ruleForm.username);
-                        this.$router.push('/');
+                        let param = this.ruleForm;
+                        this.$axios.post('http://139.159.139.221:8080/huiwcore/account/verify/', {appId:'tczxjtoa',accountId: Base64.encode(param.username),accountPasswd: Base64.encode(param.password)}).then( (res) => {
+                            if(res.code == 'C1'){
+                                let data = res.data;
+                                localStorage.setItem('token',data.token);
+                                localStorage.setItem('ms_username',data.accountName);
+                                this.$router.push('/');
+                            }else{
+                                this.$message.error(res.resMsg);
+                            }
+                        });
                     } else {
-                        console.log('error submit!!');
                         return false;
                     }
                 });
@@ -79,7 +88,7 @@
         width:350px;
         margin:-190px 0 0 -175px;
         border-radius: 5px;
-        background: rgba(255,255,255, 0.3);
+        background: rgba(0,0,0, 0.3);
         overflow: hidden;
     }
     .ms-content{

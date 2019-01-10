@@ -46,16 +46,18 @@ a {
 }
 
 .container {
-    padding: 30px;
+    padding: 20px;
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid #ededed;
+    border-radius: 3px;
 }
 
 .crumbs {
-    margin: 10px 0;
+    margin: 0 0 10px 0;
 }
-
+.handle-box{
+    margin-bottom: 15px;
+}
 .pagination {
     margin: 20px 0;
     text-align: right;
