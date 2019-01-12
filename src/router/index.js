@@ -19,6 +19,11 @@ export default new Router({
                     meta: { title: '企业管理' }
                 },
                 {
+                    path: '/talent',
+                    component: resolve => require(['../components/page/Talent.vue'], resolve),
+                    meta: { title: '人才管理' }
+                },
+                {
                     path: '/dashboard',
                     component: resolve => require(['../components/page/Dashboard.vue'], resolve),
                     meta: { title: '系统首页' }
@@ -42,6 +47,11 @@ export default new Router({
                     path: '/form',
                     component: resolve => require(['../components/page/BaseForm.vue'], resolve),
                     meta: { title: '基本表单' }
+                },
+                {
+                    path: '/form2',
+                    component: resolve => require(['../components/page/BaseForm2.vue'], resolve),
+                    meta: { title: '基本表单2' }
                 },
                 {
                     // 富文本编辑器组件

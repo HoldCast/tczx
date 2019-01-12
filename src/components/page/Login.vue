@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    let Base64 = require('js-base64').Base64
+    let Base64 = require('js-base64').Base64;
     export default {
         data: function(){
             return {
@@ -40,6 +40,9 @@
                     ]
                 }
             }
+        },
+        created(){
+            localStorage.removeItem('token');
         },
         methods: {
             submitForm(formName) {

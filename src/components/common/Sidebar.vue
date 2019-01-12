@@ -44,6 +44,11 @@
                         title: '企业管理'
                     },
                     {
+                        icon: 'el-icon-lx-people',
+                        index: 'talent',
+                        title: '人才管理'
+                    },
+                    {
                         icon: 'el-icon-lx-home',
                         index: 'dashboard',
                         title: '系统首页'

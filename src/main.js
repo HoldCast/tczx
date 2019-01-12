@@ -5,6 +5,7 @@ import router from './router';
 import axios from 'axios';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';    // 默认主题
+import 'iview/dist/styles/iview.css';
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
 import '../static/css/icon.css';
 import "babel-polyfill";
@@ -12,16 +13,15 @@ import "babel-polyfill";
 // http request 拦截器（所有发送的请求都要从这儿过一次）
 axios.interceptors.request.use(
     config => {
-        // const uuid = localStorage.getItem("uuid"); //获取存储在本地的token
+        const Token = localStorage.getItem("token"); //获取存储在本地的token
         // config.data = qs.stringify(config.data);
         // console.log(config.data)
         // config.headers = {
         //     'Content-Type': 'application/x-www-form-urlencoded', //参数格式设置
         // };
-        // if (uuid) {
-        //     config.headers.Authorization = "Token"; //携带权限参数
-        //     config.headers.uuid = uuid; //用户id
-        // }
+        if (Token) {
+            config.headers.token = Token; //携带权限参数
+        }
         config.headers.imei = '000000000000000';
         config.headers.appId = 'tczxjtoa';
         return config;
@@ -33,21 +33,14 @@ axios.interceptors.request.use(
 // http response 拦截器（所有接收到的请求都要从这儿过一次）
 axios.interceptors.response.use(
     response => {
-        console.log(999,response);
-        let status = response.status;
-        let statusText = response.statusText;
-        if(status == 200){
-            return response.data;
-        }else{
-            alert(status + ':' + statusText);
+        let token = response.headers.token;
+        if(token){
+            localStorage.setItem("token",token);
         }
+        return response.data;
     },
     error => {
-        let errData = error.response.data;
-        let status = errData.status;
-        let path = errData.path;
-        alert('code: '+ status + ', path: ' + path);
-        return Promise.reject(error.response.data)
+        return Promise.reject(error)
     }
 );
 
