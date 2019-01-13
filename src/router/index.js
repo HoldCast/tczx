@@ -19,6 +19,11 @@ export default new Router({
                     meta: { title: '企业管理' }
                 },
                 {
+                    path: '/flowUp',
+                    component: resolve => require(['../components/page/FlowUp.vue'], resolve),
+                    meta: { title: '跟进' }
+                },
+                {
                     path: '/talent',
                     component: resolve => require(['../components/page/Talent.vue'], resolve),
                     meta: { title: '人才管理' }

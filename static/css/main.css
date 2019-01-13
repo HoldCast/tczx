@@ -23,9 +23,9 @@ a {
 
 .content-box {
     position: absolute;
-    left: 250px;
+    left: 200px;
     right: 0;
-    top: 70px;
+    top: 60px;
     bottom: 0;
     /*padding-bottom: 30px;*/
     -webkit-transition: left .3s ease-in-out;
@@ -178,4 +178,7 @@ a {
 .page-nation{
     margin-top:10px;
     text-align: right;
+}
+.red{
+    color: #ff0000;
 }

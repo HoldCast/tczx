@@ -42,23 +42,28 @@
             }
         },
         created(){
-            localStorage.removeItem('token');
+            localStorage.clear();
         },
         methods: {
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let param = this.ruleForm;
-                        this.$axios.post('http://139.159.139.221:8080/huiwcore/account/verify/', {appId:'tczxjtoa',accountId: Base64.encode(param.username),accountPasswd: Base64.encode(param.password)}).then( (res) => {
+                        this.$axios.post('huiwcore/account/verify/', {appId:'tczxjtoa',accountId: Base64.encode(param.username),accountPasswd: Base64.encode(param.password)}).then( (res) => {
                             if(res.code == 'C1'){
                                 let data = res.data;
                                 localStorage.setItem('token',data.token);
                                 localStorage.setItem('ms_username',data.accountName);
                                 this.$router.push('/');
+                                this.$axios.get('huiwcore/forvue/person/').then( (res) => {
+                                    localStorage.setItem('departments',res.data.departments);
+                                });
                             }else{
                                 this.$message.error(res.resMsg);
                             }
                         });
+
+
                     } else {
                         return false;
                     }

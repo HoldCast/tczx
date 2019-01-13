@@ -11,6 +11,7 @@ import '../static/css/icon.css';
 import "babel-polyfill";
 
 // http request 拦截器（所有发送的请求都要从这儿过一次）
+axios.defaults.baseURL='/api'; //生产环境再做判断和修改
 axios.interceptors.request.use(
     config => {
         const Token = localStorage.getItem("token"); //获取存储在本地的token
@@ -36,6 +37,11 @@ axios.interceptors.response.use(
         let token = response.headers.token;
         if(token){
             localStorage.setItem("token",token);
+        }
+        let data = response.data;
+        let code = data.code;
+        if (code.indexOf('C0') != -1){
+            alert(JSON.stringify(data));
         }
         return response.data;
     },

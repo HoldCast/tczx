@@ -113,7 +113,7 @@
         position: relative;
         box-sizing: border-box;
         width: 100%;
-        height: 70px;
+        height: 60px;
         font-size: 22px;
         color: #fff;
     }
@@ -121,12 +121,12 @@
         float: left;
         padding: 0 21px;
         cursor: pointer;
-        line-height: 70px;
+        line-height: 60px;
     }
     .header .logo{
         float: left;
         width:250px;
-        line-height: 70px;
+        line-height: 60px;
     }
     .header-right{
         float: right;
@@ -134,7 +134,7 @@
     }
     .header-user-con{
         display: flex;
-        height: 70px;
+        height: 60px;
         align-items: center;
     }
     .btn-fullscreen{

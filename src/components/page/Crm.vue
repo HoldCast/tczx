@@ -7,14 +7,14 @@
         </div>
         <div class="container">
             <el-row>
-                <el-col :span="8">
+                <el-col :span="7">
                     <el-radio-group v-model="customerType" size="small">
                         <el-radio-button label="1">我跟进的客户</el-radio-button>
                         <el-radio-button label="2">我贡献的销售机会</el-radio-button>
                         <el-radio-button label="3">客户公海</el-radio-button>
                     </el-radio-group>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="5">
                     <el-input placeholder="请输入内容">
                         <el-button slot="append" icon="el-icon-search"></el-button>
                     </el-input>
@@ -28,6 +28,7 @@
 
             <el-table :data="tableData" border class="table" ref="multipleTable" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <el-table-column prop="infoFrom" label="机会来源"></el-table-column>
                 <el-table-column prop="customerType" label="客户类型"></el-table-column>
                 <el-table-column prop="customerName" label="客户名称"></el-table-column>
                 <el-table-column prop="contactTel" label="客户电话"></el-table-column>
@@ -57,10 +58,11 @@
                 "orgPid": "单位Pid"
                 -->
 
-                <el-table-column label="操作"  align="center">
+                <el-table-column label="操作" width="255"  align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleFlowUp(scope.$index, scope.row)">跟进</el-button>
+                        <el-button type="text" icon="el-icon-circle-plus-outline" @click="handleAddPerson(scope.$index, scope.row)">添加参与人</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">放弃</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -83,22 +85,44 @@
 
         <!-- 企业信息弹出框 -->
         <el-dialog :title="modelTitle" :visible.sync="modelVisible">
-
             <el-form :model="formData" label-width="100px" >
                 <el-form-item label="客户类型"><el-input v-model="formData.customerType"></el-input></el-form-item>
                 <el-form-item label="客户名称"><el-input v-model="formData.customerName"></el-input></el-form-item>
                 <el-form-item label="客户意向"><el-input v-model="formData.salesOppoStatus"></el-input></el-form-item>
                 <el-form-item label="信息来源"><el-input v-model="formData.infoFrom"></el-input></el-form-item>
+                <el-form-item label="来源人"><el-input v-model="formData.firstPersonName"></el-input></el-form-item>
                 <el-form-item label="联系人"><el-input v-model="formData.contactName"></el-input></el-form-item>
+                <el-form-item label="联系电话"><el-input v-model="formData.contactTel"></el-input></el-form-item>
                 <el-form-item label="销售类别"><el-input readonly v-model="formData.saleCategory"></el-input></el-form-item>
-
             </el-form>
 
             <div slot="footer" class="dialog-footer">
                 <el-button @click="modelVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveData">确 定</el-button>
             </div>
+        </el-dialog>
 
+
+        <!--添加参与人-->
+        <el-dialog title="添加参与人" :visible.sync="personVisible">
+            <div class="handle-box">
+                <el-input class="person-search" placeholder="请输入姓名">
+                </el-input>
+                <el-button type="primary" icon="el-icon-search">搜索</el-button>
+            </div>
+            <el-table :data="personData" border>
+                <el-table-column property="name" label="姓名" width="200"></el-table-column>
+                <el-table-column property="phone" label="电话" width="200"></el-table-column>
+                <el-table-column property="address" label="地址"></el-table-column>
+                <el-table-column label="操作"  align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-roundadd" @click="handleAddPersonBtn(scope.$index, scope.row)">添加</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="personVisible = false">关 闭</el-button>
+            </div>
         </el-dialog>
 
 
@@ -154,10 +178,12 @@
         name: 'dashboard',
         data() {
             return {
+                personVisible: false,
                 customerType: 1,
                 drawer: false,
                 saveStatus: 'add',
                 tableData:[],
+                personData:[],
                 currentPage:1,
                 pageSize:5,
                 totalPages: 0,
@@ -204,13 +230,12 @@
                 var paramQs = this.$qs.stringify(param);
                 this.$axios({
                     method: 'get',
-                    url: 'api/huiwcrm/salesOpportunity/count/',
+                    url: 'huiwcrm/salesOpportunity/count/',
                     data: param,
                 }).then(res=>{
                     this.totalPages = res.data;
-
                 });
-                this.$axios.get('api/huiwcrm/salesOpportunity/', {params:param}).then( (res) => {
+                this.$axios.get('huiwcrm/salesOpportunity/', {params:param}).then( (res) => {
                     console.log(res)
                     this.tableData = res.data;
                 });
@@ -236,6 +261,14 @@
                 this.saveStatus = 'edit';
                 this.formData = Object.assign({}, row);
             },
+            //跟进
+            handleFlowUp(index, row){
+                this.$router.push({ path: '/flowUp', query: row});
+            },
+            //添加参与人
+            handleAddPerson(index, row){
+                this.personVisible = true;
+            },
             handleDelete(index, row){
                 console.log(index, row);
                 this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
@@ -255,33 +288,23 @@
                 this.formData = {};
             },
             saveData(){
-                let saveUrl = 'api/huiwcrm/salesOpportunity/';//huiwcrm/salesOpportunity/
+                let saveUrl = 'huiwcrm/salesOpportunity/';
                 let saveStatus = this.saveStatus;
-                let method = 'post'
+                let method = 'post';
                 if(saveStatus == 'edit'){
                     method = 'put';
                 }
 
                 this.$axios({
                     method: method,
-                    url: 'api/huiwcrm/salesOpportunity/',
+                    url: 'huiwcrm/salesOpportunity/',
                     data: this.formData,
                 }).then(res=>{
-                    console.log('save:',res)
                     this.currentPage = 1;
                     this.getCompanyInfo();
+                    this.modelVisible = false;
 
                 });
-
-                this.$axios.post(saveUrl, this.formData).then( (res) => {
-                    console.log('save:',res)
-                    this.currentPage = 1;
-                    this.getCompanyInfo();
-                    //this.tableData = res.data;
-                });
-
-
-                ///huiwcrm/salesOpportunity
             },
             switchRouter(){
                 this.$router.push('/form2')
@@ -299,6 +322,10 @@
     .el-form-item{
         width:49%;
         display: inline-block;
+    }
+    .person-search{
+        display: inline-block;
+        width:300px;
     }
 
 </style>

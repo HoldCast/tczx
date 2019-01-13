@@ -144,7 +144,7 @@
         display: block;
         position: absolute;
         left: 0;
-        top: 70px;
+        top: 60px;
         bottom:0;
         overflow-y: scroll;
     }
@@ -152,7 +152,7 @@
         width: 0;
     }
     .sidebar-el-menu:not(.el-menu--collapse){
-        width: 250px;
+        width: 200px;
     }
     .sidebar > ul {
         height:100%;
